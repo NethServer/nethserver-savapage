@@ -30,3 +30,8 @@ my $event = "nethserver-savapage-update";
 event_actions($event, qw(
     initialize-default-databases 00
 ));
+
+event_templates($event, qw(
+                 /etc/papersize
+));
+

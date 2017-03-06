@@ -1,0 +1,4 @@
+{
+    my $size = $savapage{$PaperSize} || 'a4';
+    $OUT .= "$size";
+}
