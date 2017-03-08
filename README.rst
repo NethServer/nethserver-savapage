@@ -4,9 +4,7 @@ SavaPage
 
 Install and configure SavaPage: https://www.savapage.org/
 
-The package:
-
-- install SavaPage installer as /usr/local/bin/savapage-setup-linux-x64.bin
+SavaPage is installed inside ``/opt/savapage`` with ``savapage`` user.
 
 
 Database: ::
