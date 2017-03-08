@@ -7,6 +7,7 @@ Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/installer/savapage-setup-%{savapage_version}-linux-x64.bin
+AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
 Requires: java-1.7.0-openjdk
