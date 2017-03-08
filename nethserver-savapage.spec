@@ -5,7 +5,6 @@ Name: nethserver-savapage
 Version: 0.0.1
 Release: 1%{?dist}
 License: GPL
-BuildArch: noarch
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/installer/savapage-setup-%{savapage_version}-linux-x64.bin
 
@@ -35,14 +34,19 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-mkdir -p root/usr/local/bin
-cp %{SOURCE1} root/usr/local/bin/savapage-setup-linux-x64.bin
-(cd root   ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
+mkdir -p root/opt/
+cp %{SOURCE1} root/opt/savapage-setup.bin
+chmod a+x root/opt/savapage-setup.bin
+cd root/opt/ && ./savapage-setup.bin -e 
+cd -
+rm -f root/opt/savapage-setup.bin
+(cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
+%attr(-,savapage,savapage) /opt/savapage*
 %doc COPYING
 %dir %{_nseventsdir}/%{name}-update
 
