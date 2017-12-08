@@ -1,6 +1,6 @@
-%define savapage_version 0.9.11
+%define savapage_version 0.9.12
 
-Summary: Savapage configuration
+Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
 Release: 1%{?dist}
@@ -10,15 +10,15 @@ Source1: https://www.savapage.org/download/installer/savapage-setup-%{savapage_v
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
-Requires: java-1.7.0-openjdk
-Requires: poppler-utils, ImageMagick
+Requires: java-1.8.0-openjdk
+Requires: poppler-utils,ImageMagick
+Requires: java-1.8.0java-1.8.0-openjdk-devel,avahi-tools,which,gzip,strings,perl
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
 
 %description
 Avahi daemon configuration
-
 
 %pre
 getent group savapage >/dev/null || groupadd -r savapage
@@ -52,3 +52,8 @@ rm -f root/opt/savapage-setup.bin
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Fri Dec 08 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-1
+- Cloned from gsanchietti
+- Updated savapage version 0.9.12
+- Added requires to spec
+- Improved README.rst
