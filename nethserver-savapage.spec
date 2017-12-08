@@ -12,7 +12,8 @@ AutoReq: no
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
 Requires: java-1.8.0-openjdk
 Requires: poppler-utils,ImageMagick
-Requires: java-1.8.0java-1.8.0-openjdk-devel,avahi-tools,which,gzip,strings,perl
+Requires: java-1.8.0-openjdk-devel,avahi-tools
+Requires: binutils,which,gzip,perl
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
@@ -57,3 +58,4 @@ rm -f root/opt/savapage-setup.bin
 - Updated savapage version 0.9.12
 - Added requires to spec
 - Improved README.rst
+- Bugfixing
