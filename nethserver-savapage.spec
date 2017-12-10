@@ -24,7 +24,7 @@ Avahi daemon configuration
 %pre
 getent group savapage >/dev/null || groupadd -r savapage
 getent passwd savapage >/dev/null || \
-    useradd -r -g savapage -d /opt/savapage -s /sbin/nologin \
+    useradd -r -g savapage -d /home/savapage -s /bin/bash \
     -c "Savapage user" savapage
 exit 0
 
@@ -59,3 +59,6 @@ rm -f root/opt/savapage-setup.bin
 - Added requires to spec
 - Improved README.rst
 - Bugfixing
+- changed savapage login shell to /bin/bash
+- changed savapage home dir to /home/savapage
+- changed savapage no system user anymore - prevented /home/savapage creation
