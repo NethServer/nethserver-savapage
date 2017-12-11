@@ -6,7 +6,6 @@ Install and configure SavaPage: https://www.savapage.org/
 
 SavaPage is installed inside ``/opt/savapage`` with ``savapage`` user.
 
-
 Database: ::
 
  savapage=service
@@ -23,3 +22,8 @@ https://wiki.nethserver.org/doku.php?id=userguide:savapage
 
 https://community.nethserver.org/t/nethserver-savapage-module/8493
 
+ToDos
+=====
+
+Use bin package for build process and unpack on installation
+Possible configuration

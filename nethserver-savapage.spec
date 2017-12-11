@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/installer/savapage-setup-%{savapage_version}-linux-x64.bin
@@ -54,13 +54,13 @@ mv root/opt/savapage root/opt/savapageinstall
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
-* Sun Dec 10 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-1
+* Mon Dec 11 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-2
 - changed savapage login shell to /bin/bash - thanks to Rob Bosch
 - changed savapage home dir to /home/savapage - thanks to Rob Bosch
 - Added application button
-- Added savapage service
+- Added savapage installation - thanks to Rob Bosch
 * Fri Dec 08 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-1
-- Cloned from gsanchietti - thanks to Rob Bosch
+- Cloned from gsanchietti - thanks to Giacomo Sanchietti & Rob Bosch
 - Updated savapage version 0.9.12
 - Added requires to spec
 - Improved README.rst
