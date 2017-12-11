@@ -1,18 +1,25 @@
 #!/bin/bash
 
+# create postgres db if not exists
+
 su - postgres -c "psql -lqt | cut -d \| -f 1 | grep -q -w savapage"
 if [ $? -eq 1 ]; then # database do not exists
 
-    # create db and users
+    # password store for db user
+
     tmp_sql=`mktemp`
     chmod a+r $tmp_sql
     password=`perl -e "use NethServer::Password; print NethServer::Password::store('savapage');"`
+
+# create database savapage
+
 cat << EOF > $tmp_sql
 CREATE database savapage;
 CREATE USER savauser WITH PASSWORD '$password';
 ALTER USER savauser WITH SUPERUSER;
 GRANT ALL PRIVILEGES ON DATABASE savapage to savauser;
 EOF
+
     su - postgres  -c "psql < $tmp_sql" >/dev/null
     rm -f $tmp_sql
 
@@ -49,3 +56,9 @@ else
     done
 fi
 
+# install as user and as root
+
+mkdir /opt/savapage
+chown -R savapage:savapage /opt/savapage
+su savapage -c "/opt/savapageinstall/install -d /opt/savapage -n"
+/opt/savapage/MUST-RUN-AS-ROOT

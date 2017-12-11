@@ -35,4 +35,3 @@ event_actions($event, qw(
 event_templates($event, qw(
                  /etc/papersize
 ));
-
