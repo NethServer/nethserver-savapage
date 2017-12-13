@@ -1,91 +1,35 @@
 #!/bin/bash
 
 # do all here and not at build
+
+# create db and user if not exists
+
+su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
+su - postgres -c "createdb -O savapage -E UTF8 savapage -T template0"
+su - postgres -c "psql -c \"grant all privileges on database savapage to savapage;\""
+
+# install savapage
+
 mkdir /opt/savapage
-chown savapage:savapage /opt/savapage
-su savapage
+chown -R savapage:savapage /opt/savapage
 cd /opt/savapage
-wget https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin
-chmod u+x savapage-setup-0.9.12-linux-x64.bin
-./savapage-setup-0.9.12-linux-x64.bin -n
-exit
+
+# get savapage
+
+su savapage -c "wget -nc https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin"
+su savapage -c "chmod u+x savapage-setup-0.9.12-linux-x64.bin"
+
+# run non-interactive setup as savapage user
+
+su savapage -c "./savapage-setup-0.9.12-linux-x64.bin -n"
+
+# run as root for installing services
+
 /opt/savapage/MUST-RUN-AS-ROOT
 systemctl stop savapage
-su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-export"
-#postgresql-setup initdb
-su savapage
-cd /opt/savapage
-wget https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin
-chmod u+x savapage-setup-0.9.12-linux-x64.bin
-./savapage-setup-0.9.12-linux-x64.bin -n
-exit
-/opt/savapage/MUST-RUN-AS-ROOT
-systemctl stop savapage
-su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-export"
-su postgres -c "createuser savapage"
-su postgres -c "createdb -O savapage savapage"
+
+# initialize db, only done when not initialized already
+
 su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
-
-
-# create postgres db if not exists
-
-su - postgres -c "psql -lqt | cut -d \| -f 1 | grep -q -w savapage"
-if [ $? -eq 1 ]; then # database do not exists
-
-    # password store for db user
-
-    tmp_sql=`mktemp`
-    chmod a+r $tmp_sql
-    password=`perl -e "use NethServer::Password; print NethServer::Password::store('savapage');"`
-
-# create database savapage
-
-cat << EOF > $tmp_sql
-CREATE database savapage;
-CREATE USER savapage WITH PASSWORD '$password';
-#ALTER USER savapage WITH SUPERUSER;
-GRANT ALL PRIVILEGES ON DATABASE savapage to savapage;
-EOF
-
-    su - postgres  -c "psql < $tmp_sql" >/dev/null
-    rm -f $tmp_sql
-
-    # initialize db schema
-    for sql in `find /usr/share/webtop/sql/schema/ -name \*.sql`
-    #do
-    #    echo "Loading: $sql ..."
-    #    su - postgres  -c "psql savapage < $sql" >/dev/null
-    #done
-
-    # initialize db data
-    #for dsql in `find /usr/share/webtop/sql/data/ -name \*.sql`
-    #do
-    #    echo "Loading: $dsql ..."
-    #    su - postgres  -c "psql savapage < $dsql" >/dev/null
-    #done
-
-
-    # fix table owner
-    #tmp_sql=`mktemp`
-    #chmod a+r $tmp_sql
-    #for tbl in `su - postgres  -c "psql -qAt -c \"select tablename from pg_tables where schemaname = 'public';\" savapage"` \
-    #           `su - postgres  -c "psql -qAt -c \"select sequence_name from information_schema.sequences where sequence_schema = 'public';\" savapage"` \
-    #           `su - postgres  -c "psql -qAt -c \"select table_name from information_schema.views where table_schema = 'public';\" savapage"` ;
-    #do
-    #    echo "alter table \"$tbl\" owner to savauser;" >> $tmp_sql
-    #done
-    #su - postgres  -c "psql savapage < $tmp_sql" >/dev/null
-    #rm -f $tmp_sql
-else
-    #for sql in `find /usr/share/webtop/updates/pre -name \*.sql`
-    #do
-    #    su - postgres -c "psql savapage < $sql" >/dev/null
-    #done
-fi
-
-# install as user and as root
-
-mkdir /opt/savapage
-chown -R savapage:savapage /opt/savapage /opt/savapageinstall
-su savapage -c "/opt/savapageinstall/install -d /opt/savapage -n"
-/opt/savapage/MUST-RUN-AS-ROOT
+systemctl enable savapage
+systemctl start savapage

@@ -48,9 +48,11 @@ rm -rf %{buildroot}
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
 
+
+
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
-%attr(-,savapage,savapage) /opt/savapage*
+# %attr(-,savapage,savapage) /opt/savapage*
 %doc COPYING
 %dir %{_nseventsdir}/%{name}-update
 

@@ -129,14 +129,11 @@ ipp.printer-uuid=
 database.type=PostgreSQL
 database.driver=org.postgresql.Driver
 database.url=jdbc:postgresql://localhost/savapage
-database.user=savauser
-
+database.user=savapage
 {
     use esmith::util;
     my $password = NethServer::Password::store('savapage') || die('Could not generate savapage password!');
-    $OUT .= "DBPassword=$password\n";
+    $OUT .= "database.password=$password\n";
 }
-
-database.password=$password
 
 # end-of-file
