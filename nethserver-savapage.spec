@@ -10,10 +10,9 @@ Source: %{name}-%{version}.tar.gz
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
-Requires: java-1.8.0-openjdk
+Requires: java-1.7.0-openjdk
 Requires: poppler-utils,ImageMagick
-Requires: java-1.8.0-openjdk-devel,avahi-tools
-Requires: binutils,which,gzip,perl
+Requires: binutils,which,gzip,perl,avahi-tools
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
