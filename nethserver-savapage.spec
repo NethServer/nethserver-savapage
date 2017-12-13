@@ -6,7 +6,7 @@ Version: 0.0.1
 Release: 2%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
-Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
+#Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -36,14 +36,15 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-mkdir -p root/opt/
-cp %{SOURCE1} root/opt/savapage-setup.bin
-chmod a+x root/opt/savapage-setup.bin
-cd root/opt/ && ./savapage-setup.bin -e 
-cd -
-rm -f root/opt/savapage-setup.bin
-mv root/opt/savapage root/opt/savapageinstall
-(cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
+#mkdir -p root/opt/
+#cp %{SOURCE1} root/opt/savapage-setup.bin
+#chmod a+x root/opt/savapage-setup.bin
+#cd root/opt/ && ./savapage-setup.bin -e 
+#cd -
+#rm -f root/opt/savapage-setup.bin
+#mv root/opt/savapage root/opt/savapageinstall
+#(cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
+(cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
 
