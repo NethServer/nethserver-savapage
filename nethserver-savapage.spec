@@ -6,11 +6,10 @@ Version: 0.0.1
 Release: 3%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
-#Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
-Requires: java-1.7.0-openjdk
+Requires: java-1.7.0-openjdk,java-1.7.0-openjdk-devel
 Requires: poppler-utils,ImageMagick
 Requires: binutils,which,gzip,perl,avahi-tools
 Requires(pre): shadow-utils
@@ -40,7 +39,6 @@ rm -rf %{buildroot}
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
-# %attr(-,savapage,savapage) /opt/savapage*
 %doc COPYING
 %dir %{_nseventsdir}/%{name}-update
 
