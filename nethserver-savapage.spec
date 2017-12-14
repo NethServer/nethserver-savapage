@@ -9,9 +9,8 @@ Source: %{name}-%{version}.tar.gz
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
-Requires: java-1.7.0-openjdk,java-1.7.0-openjdk-devel
-Requires: poppler-utils,ImageMagick
-Requires: binutils,which,gzip,perl,avahi-tools
+Requires: java-1.8.0-openjdk,java-1.8.0-openjdk-devel
+Requires: poppler-utils,ImageMagick,binutils,which,gzip,perl,avahi-tools
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
@@ -46,7 +45,7 @@ rm -rf %{buildroot}
 * Thu Dec 14 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-3
 - Added postgres connection
 - Download now at install, not at build
-- Changed to Java 1.7.0 - thanks to Rob Bosch
+- Java 1.8 needed - thanks to Rob Bosch
 * Mon Dec 11 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-2
 - changed savapage login shell to /bin/bash - thanks to Rob Bosch
 - changed savapage home dir to /home/savapage - thanks to Rob Bosch
