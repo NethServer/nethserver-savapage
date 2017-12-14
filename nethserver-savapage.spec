@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 #Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
@@ -35,19 +35,8 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-#mkdir -p root/opt/
-#cp %{SOURCE1} root/opt/savapage-setup.bin
-#chmod a+x root/opt/savapage-setup.bin
-#cd root/opt/ && ./savapage-setup.bin -e 
-#cd -
-#rm -f root/opt/savapage-setup.bin
-#mv root/opt/savapage root/opt/savapageinstall
-#(cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
 (cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
-
-
-
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
@@ -56,6 +45,10 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Thu Dec 14 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-3
+- Added postgres connection
+- Download now at install, not at build
+- Changed to Java 1.7.0 - thanks to Rob Bosch
 * Mon Dec 11 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-2
 - changed savapage login shell to /bin/bash - thanks to Rob Bosch
 - changed savapage home dir to /home/savapage - thanks to Rob Bosch
