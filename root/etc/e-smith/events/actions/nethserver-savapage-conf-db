@@ -1,0 +1,196 @@
+#!/usr/bin/perl
+
+#
+# Copyright (C) 2017 Nethesis S.r.l.
+# http://www.nethesis.it - nethserver@nethesis.it
+#
+# This script is part of NethServer.
+#
+# NethServer is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License,
+# or any later version.
+#
+# NethServer is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with NethServer.  If not, see COPYING.
+#
+
+use esmith::ConfigDB;
+use File::Temp;
+use NethServer::SSSD;
+use NethServer::Password;
+use JSON;
+my $sssd = new NethServer::SSSD();
+
+my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
+
+$fh = File::Temp->new();
+my ($login,$pass,$uid,$gid) = getpwnam('postgres') or die "postgres not in passwd file";
+chown $uid, $gid, $fh->filename;
+#print $fh "DELETE FROM core.domains WHERE domain_id = 'NethServer';\n";
+
+my $encoded = '';
+my $secret=$sssd->bindPassword();
+
+# Some obsucre perl magic, thanks to Davidep
+pipe RH, WH;
+open(OLDIN, "<&STDIN");
+open(STDIN, "<&RH");
+if(open(PIPE, "-|")) {
+    close(RH);
+    print WH $secret;
+    close(WH);
+    {
+        local $/ = undef;
+        $encoded = <PIPE>;
+    }
+    chomp($encoded);
+} else {
+    exec("java -classpath /usr/share/webtop/ WebtopPassEncode");
+}
+close(PIPE);
+close(RH);
+open(STDIN, "<&OLDIN");
+
+my $host = $sssd->host();
+my $port = "389";
+my $basedn = $sssd->baseDN();
+my $user = $sssd->bindDN();
+my $schema = '';
+
+
+my $domain = $db->get('DomainName')->prop('type');
+#my $user = $sssd->bindDN();
+my $uri = $sssd->ldapURI();
+#my $port = "389";
+my $ssl = "N";
+my $dir_params;
+my $prefix = '';
+my $spamFolder = $db->get_prop('dovecot','SpamFolder');
+
+if ( $uri =~ /^ldaps/ ) {
+    $ssl = "Y";
+    $port = "636";
+}
+if ( $sssd->startTls() ) {
+    $ssl = "Y";
+}
+
+if ($sssd->isAD()) {
+    $prefix = 'ldapneth://';
+    $schema = 'ACTIVE_DIRECTORY';
+    $dir_params =  {
+        loginDn => $sssd->userDN(),
+        loginFilter => '&(objectCategory=person)(objectClass=user)',
+        userIdField => 'sAMAccountName',
+        userDn => $sssd->userDN(),
+        userFilter => '(&(objectClass=user)(objectCategory=person)(!(isCriticalSystemObject=TRUE)))',
+        userFirstnameField => 'givenName',
+        userLastnameField => 'sn',
+        userDisplayNameField => 'displayName'
+    };
+} else {
+    $host = '127.0.0.1';
+    $prefix = 'ldapneth://';
+    $schema = 'OPEN_LDAP';
+    $dir_params =  {  
+        loginDn => $sssd->userDN(),
+        loginFilter => undef,
+        userIdField => 'uid',
+        userDn => $sssd->userDN(),
+        userFilter => undef,
+        userFirstnameField => 'givenName',
+        userLastnameField => 'sn',
+        userDisplayNameField => 'gecos'
+    };
+}
+
+$uri = $prefix . $sssd->host() . ":" . $port;
+
+# set auth method
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.ldap.method';\n";
+
+# set ldap schema type
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$schema' WHERE property_name = 'ldap.schema.type';\n";
+
+# set host
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$host' WHERE property_name = 'auth.ldap.host';\n";
+
+# set port
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$port' WHERE property_name = 'auth.ldap.port';\n";
+
+# set use ssl
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$ssl' WHERE property_name = 'auth.ldap.use-ssl';\n";
+
+# set base dn
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$basedn' WHERE property_name = 'auth.ldap.basedn';\n";
+
+# set admin dn
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE property_name = 'auth.ldap.admin-dn';\n";
+
+# set admin password
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
+
+printf("%s",$secret);
+
+#my $query = "INSERT INTO \"core\".\"domains\" (\"domain_id\", \"internet_name\", \"enabled\", \"description\", \"user_auto_creation\", \"dir_uri\", \"dir_admin\", \"dir_password\", \"dir_connection_security\", \"dir_case_sensitive\", \"dir_password_policy\", \"dir_parameters\") VALUES ('NethServer', '$domain', 't', 'NethServer', 't', '$uri', '$user', '$encoded', $ssl, 'f', 'f', '". encode_json($dir_params)."');\n";
+
+
+# Execute SQL script
+system("su - postgres  -c 'psql savapage < ".$fh->filename."' >/dev/null");
+
+die;
+
+
+print $fh $query;
+
+# Set also public url
+my $public_url = $db->get_prop('webtop','PublicUrl') || 'http://'.$db->get('SystemName')->prop('type').'.'.$domain.'/webtop';
+
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'public.url';\n";
+print $fh "INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.core', 'public.url', '$public_url');\n";
+
+# Set vmail password
+my $vmail_password = NethServer::Password::store('vmail');
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.core' and key = 'nethtop.vmail.secret';\n";
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'nethtop.vmail.secret';\n";
+print $fh "INSERT INTO \"core\".\"settings\" VALUES ('com.sonicle.webtop.mail', 'nethtop.vmail.secret', '$vmail_password');\n";
+
+# Enable folder sorting
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'sort.folders';\n";
+print $fh "INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.mail', 'sort.folders', 'true');\n";
+
+# Always disable built-in SPAM sieve filter
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'sieve.spamfilter.disabled';\n";
+print $fh "INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.mail', 'sieve.spamfilter.disabled', 'true');\n";
+
+# Set spam folder name accordingly to Dovecot configuration
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.folder.spam';\n";
+print $fh "INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.mail', 'default.folder.spam', '$spamFolder');\n";
+
+# Delete sent messages from draft folders
+print $fh "DELETE FROM \"core\".\"settings\" WHERE service_id = 'com.sonicle.webtop.mail' and key = 'default.folder.drafts.deletemsgonsend';\n";
+print $fh "INSERT INTO \"core\".\"settings\" (\"service_id\", \"key\", \"value\") VALUES ('com.sonicle.webtop.mail', 'default.folder.drafts.deletemsgonsend', 'true');\n";
+
+# Configure Nextcloud, do not replace values if already exist
+print $fh "INSERT INTO \"core\".\"settings\" (service_id, key, value) SELECT 'com.sonicle.webtop.vfs', 'nextcloud.default.host', 'localhost' 
+              WHERE NOT EXISTS (SELECT value from \"core\".\"settings\" WHERE key = 'nextcloud.default.host' and service_id = 'com.sonicle.webtop.vfs');\n";
+print $fh "INSERT INTO \"core\".\"settings\" (service_id, key, value) SELECT 'com.sonicle.webtop.vfs', 'nextcloud.default.path', '/nextcloud/remote.php/webdav' 
+              WHERE NOT EXISTS (SELECT value from \"core\".\"settings\" WHERE key = 'nextcloud.default.path' and service_id = 'com.sonicle.webtop.vfs');\n";
+
+
+# Execute SQL script
+system("su - postgres  -c 'psql webtop5 < ".$fh->filename."' >/dev/null");

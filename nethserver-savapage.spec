@@ -42,6 +42,8 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Tue Dec 19 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-4
+- Added LDAP/AD join
 * Thu Dec 14 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-3
 - Added postgres connection
 - Download now at install, not at build

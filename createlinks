@@ -30,9 +30,15 @@ my $event = "nethserver-savapage-update";
 event_actions($event, qw(
     initialize-default-databases 00
     nethserver-savapage-conf     30
+    nethserver-savapage-conf-db  40
 ));
 
 event_templates($event, qw(
                  /etc/papersize
-                 /opt/savapage/server/server.properties
+                 /opt/savapage/server/server.properties                
+));
+
+event_services($event, qw(
+    postgres reload
+    savapage restart
 ));
