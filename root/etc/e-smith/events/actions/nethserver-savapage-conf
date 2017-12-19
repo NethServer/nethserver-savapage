@@ -14,7 +14,10 @@ if [ -f /opt/savapage/server/bin/linux-x64/savapage-db ]; then
    installsava=false
 fi
 
-echo DB: $createdb App: $installsava
+# DEBUG LINES
+#echo DB: $createdb App: $installsava
+#installsava=true
+#createdb=true
 
 # create db and user if not exists
 
@@ -28,30 +31,34 @@ fi
 # savapage install when not installed already
 
 if [ "$installsava" = true ]; then
-mkdir /opt/savapage
-chown -R savapage:savapage /opt/savapage
-cd /opt/savapage
+   mkdir /opt/savapage
+   chown -R savapage:savapage /opt/savapage
+   cd /opt/savapage
 
-# get savapage
+   # get savapage
 
-su savapage -c "wget -nc https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin"
-su savapage -c "chmod u+x savapage-setup-0.9.12-linux-x64.bin"
+   su savapage -c "wget -nc https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin"
+   su savapage -c "chmod u+x savapage-setup-0.9.12-linux-x64.bin"
 
-# run non-interactive setup as savapage user
+   # run non-interactive setup as savapage user
 
-su savapage -c "./savapage-setup-0.9.12-linux-x64.bin -n"
+   su savapage -c "./savapage-setup-0.9.12-linux-x64.bin -n"
 
-# run as root for installing services
+   # run as root for installing services
 
-/opt/savapage/MUST-RUN-AS-ROOT
-systemctl stop savapage
+   /opt/savapage/MUST-RUN-AS-ROOT
 fi
+
+# enable savapage
+
+systemctl enable savapage
 
 # initialize db, only done when created
 
 if [ "$createdb" = true ]; then
-su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
-systemctl enable savapage
-expand-template /opt/savapage/server/server.properties
-systemctl start savapage
+   systemctl stop savapage
+   su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
+   systemctl enable savapage
+   expand-template /opt/savapage/server/server.properties
+   systemctl start savapage
 fi

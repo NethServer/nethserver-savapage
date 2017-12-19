@@ -32,45 +32,39 @@ my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
 $fh = File::Temp->new();
 my ($login,$pass,$uid,$gid) = getpwnam('postgres') or die "postgres not in passwd file";
 chown $uid, $gid, $fh->filename;
-#print $fh "DELETE FROM core.domains WHERE domain_id = 'NethServer';\n";
 
 my $encoded = '';
 my $secret=$sssd->bindPassword();
 
-# Some obsucre perl magic, thanks to Davidep
-pipe RH, WH;
-open(OLDIN, "<&STDIN");
-open(STDIN, "<&RH");
-if(open(PIPE, "-|")) {
-    close(RH);
-    print WH $secret;
-    close(WH);
-    {
-        local $/ = undef;
-        $encoded = <PIPE>;
-    }
-    chomp($encoded);
-} else {
-    exec("java -classpath /usr/share/webtop/ WebtopPassEncode");
-}
-close(PIPE);
-close(RH);
-open(STDIN, "<&OLDIN");
+# Some obsucre perl magic, thanks to Davidep - maybe needed for password encryption
+#pipe RH, WH;
+#open(OLDIN, "<&STDIN");
+#open(STDIN, "<&RH");
+#if(open(PIPE, "-|")) {
+#    close(RH);
+#    print WH $secret;
+#    close(WH);
+#    {
+#        local $/ = undef;
+#        $encoded = <PIPE>;
+#    }
+#    chomp($encoded);
+#} else {
+#    exec("java -classpath /usr/share/webtop/ WebtopPassEncode");
+#}
+#close(PIPE);
+#close(RH);
+#open(STDIN, "<&OLDIN");
 
 my $host = $sssd->host();
 my $port = "389";
 my $basedn = $sssd->baseDN();
 my $user = $sssd->bindDN();
 my $schema = '';
-
-my $domain = $db->get('DomainName')->prop('type');
-#my $user = $sssd->bindDN();
-my $uri = $sssd->ldapURI();
-#my $port = "389";
 my $ssl = "N";
-my $dir_params;
-my $prefix = '';
-my $spamFolder = $db->get_prop('dovecot','SpamFolder');
+my $user = $sssd->bindDN();
+my $port = "389";
+my $ssl = "N";
 
 if ( $uri =~ /^ldaps/ ) {
     $ssl = "Y";
@@ -81,36 +75,11 @@ if ( $sssd->startTls() ) {
 }
 
 if ($sssd->isAD()) {
-    $prefix = 'ldapneth://';
     $schema = 'ACTIVE_DIRECTORY';
-    $dir_params =  {
-        loginDn => $sssd->userDN(),
-        loginFilter => '&(objectCategory=person)(objectClass=user)',
-        userIdField => 'sAMAccountName',
-        userDn => $sssd->userDN(),
-        userFilter => '(&(objectClass=user)(objectCategory=person)(!(isCriticalSystemObject=TRUE)))',
-        userFirstnameField => 'givenName',
-        userLastnameField => 'sn',
-        userDisplayNameField => 'displayName'
-    };
 } else {
     $host = '127.0.0.1';
-    $prefix = 'ldapneth://';
     $schema = 'OPEN_LDAP';
-    $dir_params =  {  
-        loginDn => $sssd->userDN(),
-        loginFilter => undef,
-        userIdField => 'uid',
-        userDn => $sssd->userDN(),
-        userFilter => undef,
-        userFirstnameField => 'givenName',
-        userLastnameField => 'sn',
-        userDisplayNameField => 'gecos'
-    };
 }
-
-$uri = $prefix . $sssd->host() . ":" . $port;
-
 
 # stop savapage and restart postgersql services
 system("systemctl stop savapage");
@@ -140,11 +109,8 @@ print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE 
 # set admin password
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
 
-#printf("%s",$secret);
-#my $query = "INSERT INTO \"core\".\"domains\" (\"domain_id\", \"internet_name\", \"enabled\", \"description\", \"user_auto_creation\", \"dir_uri\", \"dir_admin\", \"dir_password\", \"dir_connection_security\", \"dir_case_sensitive\", \"dir_password_policy\", \"dir_parameters\") VALUES ('NethServer', '$domain', 't', 'NethServer', 't', '$uri', '$user', '$encoded', $ssl, 'f', 'f', '". encode_json($dir_params)."');\n";
-
 # Execute SQL script
 system("su - postgres  -c 'psql savapage < ".$fh->filename."' >/dev/null");
 
-# start savapage
-system("systemctl start savapage");
+# restart savapage
+system("systemctl restart savapage");
