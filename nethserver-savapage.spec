@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 AutoReq: no
@@ -16,7 +16,7 @@ Requires(pre): shadow-utils
 BuildRequires: nethserver-devtools
 
 %description
-Avahi daemon configuration
+Savapage integration to NethServer
 
 %pre
 getent group savapage >/dev/null || groupadd -r savapage
@@ -44,6 +44,8 @@ rm -rf %{buildroot}
 %changelog
 * Tue Dec 19 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-4
 - Added LDAP/AD join
+- Added nethserver-savapage-conf-db perl action script
+- Added description to pasted spec
 * Thu Dec 14 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-3
 - Added postgres connection
 - Download now at install, not at build

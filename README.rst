@@ -25,9 +25,7 @@ https://community.nethserver.org/t/nethserver-savapage-module/8493
 ToDos
 =====
 
-LDAP/AD
 Default configuration
 Some props for e-smith db
 Split config and download
 Snapshot or stable version switch
-Nethgui

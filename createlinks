@@ -29,8 +29,8 @@ my $event = "nethserver-savapage-update";
 
 event_actions($event, qw(
     initialize-default-databases 00
-    nethserver-savapage-conf     30
-    nethserver-savapage-conf-db  40
+    nethserver-savapage-conf     10
+    nethserver-savapage-conf-db  20
 ));
 
 event_templates($event, qw(
