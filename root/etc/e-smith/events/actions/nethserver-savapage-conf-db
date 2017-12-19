@@ -57,6 +57,7 @@ close(PIPE);
 close(RH);
 open(STDIN, "<&OLDIN");
 
+my $authmethod = 'none';
 my $host = $sssd->host();
 my $port = "389";
 my $basedn = $sssd->baseDN();
@@ -83,6 +84,7 @@ if ( $sssd->startTls() ) {
 
 if ($sssd->isAD()) {
     $prefix = 'ldapneth://';
+    $authmethod = 'ldap';
     $schema = 'ACTIVE_DIRECTORY';
     $dir_params =  {
         loginDn => $sssd->userDN(),
@@ -97,6 +99,7 @@ if ($sssd->isAD()) {
 } else {
     $host = '127.0.0.1';
     $prefix = 'ldapneth://';
+    $authmethod = 'ldap';
     $schema = 'OPEN_LDAP';
     $dir_params =  {  
         loginDn => $sssd->userDN(),
@@ -114,7 +117,7 @@ $uri = $prefix . $sssd->host() . ":" . $port;
 
 # set auth method
 
-print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.ldap.method';\n";
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
 
 # set ldap schema type
 
