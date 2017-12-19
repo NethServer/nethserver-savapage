@@ -111,6 +111,11 @@ if ($sssd->isAD()) {
 
 $uri = $prefix . $sssd->host() . ":" . $port;
 
+
+# stop savapage and restart postgersql services
+system("systemctl stop savapage");
+system("systemctl restart postgresql");
+
 # set auth method
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.method';\n";
 
@@ -141,3 +146,5 @@ print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHE
 # Execute SQL script
 system("su - postgres  -c 'psql savapage < ".$fh->filename."' >/dev/null");
 
+# start savapage
+system("systemctl start savapage");
