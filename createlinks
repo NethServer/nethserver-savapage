@@ -27,15 +27,16 @@ use File::Path;
 
 my $event = "nethserver-savapage-update";
 
-event_actions($event, qw(
-    initialize-default-databases 00
-    nethserver-savapage-conf     10
-    nethserver-savapage-conf-db  20
-));
-
 event_templates($event, qw(
                  /etc/papersize
-                 /opt/savapage/server/server.properties                
+                 /opt/savapage/server/server.properties
+));
+
+event_actions($event, qw(
+    initialize-default-databases  00
+    nethserver-savapage-conf-init 10
+    nethserver-savapage-conf      20
+    nethserver-savapage-conf-db   30
 ));
 
 event_services($event, qw(
