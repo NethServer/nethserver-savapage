@@ -19,14 +19,12 @@ fi
 #installsava=true
 #createdb=true
 
-# create db and user if not exists
+# create db, role and set privilges
 
-if [ "$createdb" = true ]; then
-su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
-su - postgres -c "psql -c \"ALTER USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
-su - postgres -c "createdb -O savapage -E UTF8 -T template0 savapage"
-su - postgres -c "psql -c \"grant all privileges on database savapage to savapage;\""
-fi
+#su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
+#su - postgres -c "psql -c \"ALTER USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
+#su - postgres -c "createdb -O savapage -E UTF8 -T template0 savapage"
+#su - postgres -c "psql -c \"grant all privileges on database savapage to savapage;\""
 
 # savapage install when not installed already
 
@@ -53,12 +51,18 @@ fi
 
 systemctl enable savapage
 
+# create db, role and set privilges
+
+su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
+su - postgres -c "psql -c \"ALTER USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
+su - postgres -c "createdb -O savapage -E UTF8 -T template0 savapage"
+su - postgres -c "psql -c \"grant all privileges on database savapage to savapage;\""
+
 # initialize db, only done when created
 
 if [ "$createdb" = true ]; then
    systemctl stop savapage
-   su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
-   systemctl enable savapage
    expand-template /opt/savapage/server/server.properties
+   su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
    systemctl start savapage
 fi

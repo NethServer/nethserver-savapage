@@ -6,6 +6,7 @@ Version: 0.0.1
 Release: 4%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
+Source2: SavaPassEncode.java
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -23,6 +24,17 @@ getent group savapage >/dev/null || groupadd -r savapage
 getent passwd savapage >/dev/null || \
     useradd -r -g savapage -d /home/savapage -s /bin/bash \
     -c "Savapage user" savapage
+
+mkdir /opt/savapage
+mkdir /usr/share/savapage
+
+for source in %{SOURCE2}
+do
+    cp $source root/usr/share/savapage
+    source=`basename $source`
+    javac root/usr/share/savapage/$source
+    rm -f root/usr/share/savapage/$source
+done
 exit 0
 
 %prep
