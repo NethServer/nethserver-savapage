@@ -14,15 +14,19 @@ if [ -f /opt/savapage/server/bin/linux-x64/savapage-db ]; then
    installsava=false
 fi
 
+
 # expand-template for having savapage password in /var/lib/nethserver/secrets/savapage
+echo "SAVAPAGE DEBUG template expand #1"
 expand-template /opt/savapage/server/server.properties
 
 # DEBUG LINES
-#echo DB: $createdb App: $installsava
+echo SAVAPAGE DEBUG DB: $createdb App: $installsava
 #installsava=true
 #createdb=true
 
 # create db, role and set privilges
+
+echo "SAVAPAGE DEBUG CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)'"
 
 su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
 su - postgres -c "psql -c \"ALTER USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
@@ -55,6 +59,12 @@ fi
 systemctl enable savapage
 
 # initialize db, only done when created
+
+# expand-template for having savapage password in /var/lib/nethserver/secrets/savapage
+echo "SAVAPAGE DEBUG template expand #2"
+expand-template /opt/savapage/server/server.properties
+
+
 
 if [ "$createdb" = true ]; then
    systemctl stop savapage

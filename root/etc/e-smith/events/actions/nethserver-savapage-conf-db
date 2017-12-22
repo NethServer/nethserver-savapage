@@ -110,7 +110,7 @@ print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE 
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
 
 # Execute SQL script
-system("su - postgres  -c 'psql savapage < ".$fh->filename."' >/dev/null");
+system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");
 
 # restart savapage
 system("systemctl restart savapage");
