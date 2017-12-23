@@ -55,8 +55,7 @@ fi
 # initialize db, only done when created
 
 # expand-template for writing password to server.properties which is needed by db-init
-#echo "SAVAPAGE DEBUG template expand #2"
-#expand-template /opt/savapage/server/server.properties
+expand-template /opt/savapage/server/server.properties
 
 # initialize db, only done when created
 
