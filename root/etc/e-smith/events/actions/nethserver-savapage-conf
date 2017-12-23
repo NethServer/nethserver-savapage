@@ -60,9 +60,7 @@ expand-template /opt/savapage/server/server.properties
 # initialize db, only done when created
 
 if [ "$createdb" = true ]; then
-#  systemctl stop savapage
-
    su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
-
-#   systemctl start savapage
+   systemctl restart savapage
+   sleep 20
 fi
