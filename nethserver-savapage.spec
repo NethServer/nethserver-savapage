@@ -6,7 +6,7 @@ Version: 0.0.1
 Release: 4%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
-Source2: SavaPassEncode.java
+#Source2: SavaPassEncode.java
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -15,6 +15,7 @@ Requires: poppler-utils,ImageMagick,binutils,which,gzip,perl,avahi-tools
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
+#BuildRequires: java-1.8.0-openjdk-devel
 
 %description
 Savapage integration to NethServer
@@ -31,16 +32,16 @@ exit 0
 
 %build
 perl createlinks
-mkdir -p /opt/savapage
-mkdir -p /usr/share/savapage
 
-for source in %{SOURCE2}
-do
-    cp $source root/usr/share/savapage
-    source=`basename $source`
-    javac root/usr/share/savapage/$source
-    rm -f root/usr/share/savapage/$source
-done
+
+#mkdir -p root/usr/share/savapage
+#for source in %{SOURCE2}
+#do
+#    cp $source root/usr/share/savapage
+#    source=`basename $source`
+#    javac root/usr/share/savapage/$source
+#    rm -f root/usr/share/savapage/$source
+#done
 
 
 %install
