@@ -24,9 +24,15 @@ getent group savapage >/dev/null || groupadd -r savapage
 getent passwd savapage >/dev/null || \
     useradd -r -g savapage -d /home/savapage -s /bin/bash \
     -c "Savapage user" savapage
+exit 0
 
-mkdir /opt/savapage
-mkdir /usr/share/savapage
+%prep
+%setup
+
+%build
+perl createlinks
+mkdir -p /opt/savapage
+mkdir -p /usr/share/savapage
 
 for source in %{SOURCE2}
 do
@@ -35,13 +41,7 @@ do
     javac root/usr/share/savapage/$source
     rm -f root/usr/share/savapage/$source
 done
-exit 0
 
-%prep
-%setup
-
-%build
-perl createlinks
 
 %install
 rm -rf %{buildroot}
