@@ -79,11 +79,10 @@ if ($sssd->isAD()) {
 } else {
     $host = '127.0.0.1';
     $schema = 'OPEN_LDAP';
+    $user = '';
+    $encoded = '';
+    $secret = '';
 }
-
-# stop savapage and restart postgersql services
-system("systemctl stop savapage");
-system("systemctl restart postgresql");
 
 # set auth method
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.method';\n";
