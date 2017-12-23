@@ -16,13 +16,11 @@ fi
 
 
 # DEBUG LINES
-echo SAVAPAGE DEBUG DB: $createdb App: $installsava
+#echo SAVAPAGE DEBUG DB: $createdb App: $installsava
 #installsava=true
 #createdb=true
 
 # create db, role and set privilges
-
-echo "SAVAPAGE DEBUG CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)'"
 
 su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
 su - postgres -c "psql -c \"ALTER USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
@@ -53,19 +51,17 @@ fi
 # enable savapage
 #systemctl enable savapage
 
+
 # initialize db, only done when created
 
 # expand-template for writing password to server.properties which is needed by db-init
-echo "SAVAPAGE DEBUG template expand #2"
-expand-template /opt/savapage/server/server.properties
+#echo "SAVAPAGE DEBUG template expand #2"
+#expand-template /opt/savapage/server/server.properties
 
+# initialize db, only done when created
 
 if [ "$createdb" = true ]; then
 #  systemctl stop savapage
-
-   # expand-template for writing password to server.properties which is needed by db-init
-   echo "SAVAPAGE DEBUG template expand #2"
-   expand-template /opt/savapage/server/server.properties
 
    su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
 
