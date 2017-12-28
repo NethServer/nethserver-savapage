@@ -62,27 +62,29 @@ my $basedn = $sssd->baseDN();
 my $user = $sssd->bindDN();
 my $schema = '';
 my $ssl = "N";
-my $user = $sssd->bindDN();
-my $port = "389";
-my $ssl = "N";
+my $authmethod = "-";
 
-if ( $uri =~ /^ldaps/ ) {
-    $ssl = "Y";
-    $port = "636";
-}
-if ( $sssd->startTls() ) {
-    $ssl = "Y";
-}
+#if ( $sssd->startTls() ) {
+#    $ssl = "Y";
+#}
 
 if ($sssd->isAD()) {
     $schema = 'ACTIVE_DIRECTORY';
-} else {
-    $host = '127.0.0.1';
+    $authmethod = "ldap";
+}
+
+if ($sssd->isLdap()) {
+    $authmethod = "ldap";
     $schema = 'OPEN_LDAP';
     $user = '';
     $encoded = '';
     $secret = '';
 }
+
+
+# if ($sssd->isLocalProvider()) {
+# }
+
 
 # set auth method
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.method';\n";
@@ -105,8 +107,20 @@ print $fh "UPDATE savapage.public.tbl_config SET property_value = '$basedn' WHER
 # set admin dn
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE property_name = 'auth.ldap.admin-dn';\n";
 
+# set currency
+print $fh "UPDATE savapage.public.tbl_config SET property_value = 'EUR' WHERE property_name = 'financial.global.currency-code';\n";
+
+# set locale
+print $fh "UPDATE savapage.public.tbl_config SET property_value = 'en-US' WHERE property_name = 'system.default-locale';\n";
+
+# set mail from
+
+print $fh "UPDATE savapage.public.tbl_config SET property_value = 'savapage@localhost' WHERE property_name = 'mail.from.address';\n";
+
 # set admin password
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
+
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-password --value \"$secret\"'");
 
 # Execute SQL script
 system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");

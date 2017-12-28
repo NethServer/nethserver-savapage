@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 #Source2: SavaPassEncode.java
@@ -55,6 +55,11 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Thu Dec 28 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-5
+- Added password with savapage-cmd - thanks to Rijk Ravestein
+- Added no user source when no AD/LDAP is installed - thanks to Rob Bosch
+- Added defaults to get a ready to use savapage instead of having to do some setup steps - thanks to Rob Bosch
+- Added remote LDAP host - thanks to Rob Bosch
 * Tue Dec 19 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-4
 - Added LDAP/AD join
 - Added nethserver-savapage-conf-db perl action script
@@ -74,5 +79,3 @@ rm -rf %{buildroot}
 - Updated savapage version 0.9.12
 - Added requires to spec
 - Improved README.rst
-
-
