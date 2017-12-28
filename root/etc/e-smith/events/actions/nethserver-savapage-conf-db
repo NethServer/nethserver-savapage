@@ -62,7 +62,7 @@ my $basedn = $sssd->baseDN();
 my $user = $sssd->bindDN();
 my $schema = '';
 my $ssl = "N";
-my $authmethod = "-";
+my $authmethod = "none";
 
 #if ( $sssd->startTls() ) {
 #    $ssl = "Y";
@@ -87,7 +87,7 @@ if ($sssd->isLdap()) {
 
 
 # set auth method
-print $fh "UPDATE savapage.public.tbl_config SET property_value = 'ldap' WHERE property_name = 'auth.method';\n";
+print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
 
 # set ldap schema type
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$schema' WHERE property_name = 'ldap.schema.type';\n";
