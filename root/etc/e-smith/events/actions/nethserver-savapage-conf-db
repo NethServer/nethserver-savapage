@@ -75,9 +75,11 @@ if ($sssd->isAD()) {
     $authmethod = "ldap";
     $user = $domain.'\savaaduser';
     $secret = NethServer::Password::store('savaaduser') || die('Could not generate savaaduser password!');
+    # create savaaduser and restart samba in container to activate the no strong auth patch
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user delete savaaduser");
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user create savaaduser $secret");
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user setexpiry --noexpiry savaaduser");
+    system("systemctl -M nsdc restart samba");
 }
 
 if ($sssd->isLdap()) {
@@ -135,3 +137,8 @@ system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
 
 # restart savapage
 system("systemctl restart savapage");
+
+sleep 10;
+
+# sync AD/LDAP users
+system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
