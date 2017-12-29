@@ -55,6 +55,9 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Fri Dec 29 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-6
+- Added AD/LDAP user sync via new savapage-cmd - thanks to Rijk Ravestein
+- Added savaaduser to sync AD
 * Thu Dec 28 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-5
 - Added password with savapage-cmd - thanks to Rijk Ravestein
 - Added no user source when no AD/LDAP is installed - thanks to Rob Bosch

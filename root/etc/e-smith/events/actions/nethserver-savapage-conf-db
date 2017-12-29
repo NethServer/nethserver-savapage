@@ -25,9 +25,11 @@ use File::Temp;
 use NethServer::SSSD;
 use NethServer::Password;
 use JSON;
+use esmith::util;
 my $sssd = new NethServer::SSSD();
-
 my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
+my $record = $db->get("sssd") or die "No Workgroup in config db";
+my $domain = $record->prop("Workgroup");
 
 $fh = File::Temp->new();
 my ($login,$pass,$uid,$gid) = getpwnam('postgres') or die "postgres not in passwd file";
@@ -71,6 +73,11 @@ my $authmethod = "none";
 if ($sssd->isAD()) {
     $schema = 'ACTIVE_DIRECTORY';
     $authmethod = "ldap";
+    $user = $domain.'\savaaduser';
+    $secret = NethServer::Password::store('savaaduser') || die('Could not generate savaaduser password!');
+    system("systemd-run -t -M nsdc /usr/bin/samba-tool user delete savaaduser");
+    system("systemd-run -t -M nsdc /usr/bin/samba-tool user create savaaduser $secret");
+    system("systemd-run -t -M nsdc /usr/bin/samba-tool user setexpiry --noexpiry savaaduser");
 }
 
 if ($sssd->isLdap()) {
@@ -81,10 +88,8 @@ if ($sssd->isLdap()) {
     $secret = '';
 }
 
-
 # if ($sssd->isLocalProvider()) {
 # }
-
 
 # set auth method
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
@@ -124,6 +129,9 @@ system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.ad
 
 # Execute SQL script
 system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");
+
+# sync AD/LDAP users
+system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
 
 # restart savapage
 system("systemctl restart savapage");
