@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 #Source2: SavaPassEncode.java
