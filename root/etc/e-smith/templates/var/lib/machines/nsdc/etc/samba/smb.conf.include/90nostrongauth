@@ -1,0 +1,4 @@
+#
+# 90nostrongauth - template for working AD join without cert in savapage
+#
+ldap server require strong auth = no
