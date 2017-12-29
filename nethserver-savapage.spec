@@ -63,6 +63,7 @@ rm -rf %{buildroot}
 - Added no user source when no AD/LDAP is installed - thanks to Rob Bosch
 - Added defaults to get a ready to use savapage instead of having to do some setup steps - thanks to Rob Bosch
 - Added remote LDAP host - thanks to Rob Bosch
+- Added samba DC patch for no strong auth to make savapage work without cert
 * Tue Dec 19 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-4
 - Added LDAP/AD join
 - Added nethserver-savapage-conf-db perl action script
