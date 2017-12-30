@@ -29,46 +29,35 @@ use esmith::util;
 my $sssd = new NethServer::SSSD();
 my $db = esmith::ConfigDB->open_ro() or die "Could not open config db";
 my $record = $db->get("sssd") or die "No Workgroup in config db";
+
+# get domain for AD domain\username
 my $domain = $record->prop("Workgroup");
 
 $fh = File::Temp->new();
 my ($login,$pass,$uid,$gid) = getpwnam('postgres') or die "postgres not in passwd file";
 chown $uid, $gid, $fh->filename;
 
-my $encoded = '';
+# get bind password
 my $secret=$sssd->bindPassword();
 
-# Some obsucre perl magic, thanks to Davidep - maybe needed for password encryption
-#pipe RH, WH;
-#open(OLDIN, "<&STDIN");
-#open(STDIN, "<&RH");
-#if(open(PIPE, "-|")) {
-#    close(RH);
-#    print WH $secret;
-#    close(WH);
-#    {
-#        local $/ = undef;
-#        $encoded = <PIPE>;
-#    }
-#    chomp($encoded);
-#} else {
-#    exec("java -classpath /usr/share/webtop/ WebtopPassEncode");
-#}
-#close(PIPE);
-#close(RH);
-#open(STDIN, "<&OLDIN");
-
+# get hostname
 my $host = $sssd->host();
+
+# set port
 my $port = "389";
+
+# get baseDN
 my $basedn = $sssd->baseDN();
+
+# get bindDN
 my $user = $sssd->bindDN();
+
+# set schema, ssl and authmethod
 my $schema = '';
 my $ssl = "N";
 my $authmethod = "none";
 
-#if ( $sssd->startTls() ) {
-#    $ssl = "Y";
-#}
+# if AD is used
 
 if ($sssd->isAD()) {
     $schema = 'ACTIVE_DIRECTORY';
@@ -76,17 +65,19 @@ if ($sssd->isAD()) {
     $user = $domain.'\savaaduser';
     $secret = NethServer::Password::store('savaaduser') || die('Could not generate savaaduser password!');
     # create savaaduser and restart samba in container to activate the no strong auth patch
+    system("expand-template /var/lib/machines/nsdc/etc/samba/smb.conf.include");
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user delete savaaduser");
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user create savaaduser $secret");
     system("systemd-run -t -M nsdc /usr/bin/samba-tool user setexpiry --noexpiry savaaduser");
     system("systemctl -M nsdc restart samba");
 }
 
+# if LDAP is used
+
 if ($sssd->isLdap()) {
     $authmethod = "ldap";
     $schema = 'OPEN_LDAP';
     $user = '';
-    $encoded = '';
     $secret = '';
 }
 
@@ -95,50 +86,49 @@ if ($sssd->isLdap()) {
 
 # set auth method
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.method --value \"$authmethod\"'");
 
 # set ldap schema type
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$schema' WHERE property_name = 'ldap.schema.type';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name ldap.schema.type --value \"$schema\"'");
 
 # set host
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$host' WHERE property_name = 'auth.ldap.host';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.host --value \"$host\"'");
 
 # set port
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$port' WHERE property_name = 'auth.ldap.port';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.port --value \"$port\"'");
 
 # set use ssl
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$ssl' WHERE property_name = 'auth.ldap.use-ssl';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.use-ssl --value \"$ssl\"'");
 
 # set base dn
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$basedn' WHERE property_name = 'auth.ldap.basedn';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.basedn --value \"$basedn\"'");
 
 # set admin dn
 print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE property_name = 'auth.ldap.admin-dn';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-dn --value \"$user\"'");
 
 # set currency
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'EUR' WHERE property_name = 'financial.global.currency-code';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name financial.global.currency-code --value \"EUR\"'");
 
 # set locale
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'en-US' WHERE property_name = 'system.default-locale';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name system.default-locale --value \"en-US\"'");
 
 # set mail from
-
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'savapage@localhost' WHERE property_name = 'mail.from.address';\n";
+#system("su - savapage -c 'savapage-cmd --set-config-property --name mail.from.address --value \"savapage@localhost\"'");
 
 # set admin password
-#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$encoded' WHERE property_name = 'auth.ldap.admin-password';\n";
-
 system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-password --value \"$secret\"'");
 
-# Execute SQL script
+# Execute SQL script - not needed anymore because of savapage-cmd
 system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");
-
-# sync AD/LDAP users
-system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
-
-# restart savapage
-system("systemctl restart savapage");
-
-sleep 10;
 
 # sync AD/LDAP users
 system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");

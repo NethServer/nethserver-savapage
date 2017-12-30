@@ -6,7 +6,6 @@ Version: 0.0.1
 Release: 6%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
-#Source2: SavaPassEncode.java
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -15,7 +14,6 @@ Requires: poppler-utils,ImageMagick,binutils,which,gzip,perl,avahi-tools
 Requires(pre): shadow-utils
 
 BuildRequires: nethserver-devtools
-#BuildRequires: java-1.8.0-openjdk-devel
 
 %description
 Savapage integration to NethServer
@@ -33,17 +31,6 @@ exit 0
 %build
 perl createlinks
 
-
-#mkdir -p root/usr/share/savapage
-#for source in %{SOURCE2}
-#do
-#    cp $source root/usr/share/savapage
-#    source=`basename $source`
-#    javac root/usr/share/savapage/$source
-#    rm -f root/usr/share/savapage/$source
-#done
-
-
 %install
 rm -rf %{buildroot}
 (cd root; find . -depth -print | cpio -dump %{buildroot})
@@ -55,9 +42,11 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
-* Fri Dec 29 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-6
+
+* Sat Dec 30 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-6
 - Added AD/LDAP user sync via new savapage-cmd - thanks to Rijk Ravestein
-- Added savaaduser to sync AD
+- Added savaaduser creation to sync AD
+- Replaced db commands with savapage-cmd 
 * Thu Dec 28 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-5
 - Added password with savapage-cmd - thanks to Rijk Ravestein
 - Added no user source when no AD/LDAP is installed - thanks to Rob Bosch
