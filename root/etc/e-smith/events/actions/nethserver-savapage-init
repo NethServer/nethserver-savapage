@@ -1,0 +1,5 @@
+#!/usr/bin/perl
+
+use esmith::util;
+my $password = NethServer::Password::store('savapage') || die('Could not generate savapage password!');
+printf("init: Password set\n");
