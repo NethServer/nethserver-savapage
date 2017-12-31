@@ -85,44 +85,44 @@ if ($sssd->isLdap()) {
 # }
 
 # set auth method
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.method --value \"$authmethod\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$authmethod' WHERE property_name = 'auth.method';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.method --value \"$authmethod\"'");
 
 # set ldap schema type
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$schema' WHERE property_name = 'ldap.schema.type';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name ldap.schema.type --value \"$schema\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$schema' WHERE property_name = 'ldap.schema.type';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name ldap.schema.type --value \"$schema\"'");
 
 # set host
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$host' WHERE property_name = 'auth.ldap.host';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.host --value \"$host\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$host' WHERE property_name = 'auth.ldap.host';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.host --value \"$host\"'");
 
 # set port
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$port' WHERE property_name = 'auth.ldap.port';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.port --value \"$port\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$port' WHERE property_name = 'auth.ldap.port';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.port --value \"$port\"'");
 
 # set use ssl
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$ssl' WHERE property_name = 'auth.ldap.use-ssl';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.use-ssl --value \"$ssl\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$ssl' WHERE property_name = 'auth.ldap.use-ssl';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.use-ssl --value \"$ssl\"'");
 
 # set base dn
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$basedn' WHERE property_name = 'auth.ldap.basedn';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.basedn --value \"$basedn\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$basedn' WHERE property_name = 'auth.ldap.basedn';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.basedn --value \"$basedn\"'");
 
 # set admin dn
-print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE property_name = 'auth.ldap.admin-dn';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-dn --value \"$user\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = '$user' WHERE property_name = 'auth.ldap.admin-dn';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-dn --value \"$user\"'");
 
 # set currency
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'EUR' WHERE property_name = 'financial.global.currency-code';\n";
 #system("su - savapage -c 'savapage-cmd --set-config-property --name financial.global.currency-code --value \"EUR\"'");
 
 # set locale
-print $fh "UPDATE savapage.public.tbl_config SET property_value = 'en-US' WHERE property_name = 'system.default-locale';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name system.default-locale --value \"en-US\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = 'en-US' WHERE property_name = 'system.default-locale';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name system.default-locale --value \"en-US\"'");
 
 # set mail from
-print $fh "UPDATE savapage.public.tbl_config SET property_value = 'savapage@localhost' WHERE property_name = 'mail.from.address';\n";
-#system("su - savapage -c 'savapage-cmd --set-config-property --name mail.from.address --value \"savapage@localhost\"'");
+#print $fh "UPDATE savapage.public.tbl_config SET property_value = 'savapage@localhost' WHERE property_name = 'mail.from.address';\n";
+system("su - savapage -c 'savapage-cmd --set-config-property --name mail.from.address --value \"savapage@localhost\"'");
 
 # set admin password
 system("su - savapage -c 'savapage-cmd --set-config-property --name auth.ldap.admin-password --value \"$secret\"'");
