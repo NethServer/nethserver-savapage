@@ -35,6 +35,7 @@ perl createlinks
 rm -rf %{buildroot}
 (cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
+mkdir -p /opt/savapage/server
 
 %files -f %{name}-%{version}-%{release}-filelist
 %defattr(-,root,root)
