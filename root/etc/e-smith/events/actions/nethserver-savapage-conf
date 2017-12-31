@@ -46,6 +46,7 @@ if [ "$installsava" = true ]; then
    # run as root for installing services
 
    /opt/savapage/MUST-RUN-AS-ROOT
+   sleep 10
 fi
 
 # enable savapage
@@ -62,5 +63,5 @@ expand-template /opt/savapage/server/server.properties
 if [ "$createdb" = true ]; then
    su savapage -c "/opt/savapage/server/bin/linux-x64/savapage-db --db-init"
    systemctl start savapage
-   sleep 20
+   sleep 10
 fi
