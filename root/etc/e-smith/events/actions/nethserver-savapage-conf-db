@@ -132,3 +132,6 @@ system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");
 
 # sync AD/LDAP users
 system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
+
+# list users to see if synced - savapage-cmd --list-users
+system("su - savapage -c 'savapage-cmd --list-users'");
