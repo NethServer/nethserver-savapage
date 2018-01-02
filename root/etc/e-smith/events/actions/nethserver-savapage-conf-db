@@ -159,8 +159,8 @@ sleep 10;
 printf("self signed certs...\n");
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'Y' WHERE property_name = 'auth.ldap.use-ssl.trust-self-signed';\n";
 
-#printf("savapage-db self signed certs...\n");
-#system("su - savapage -c 'savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\"'");
+printf("savapage-db self signed certs...\n");
+system("su - savapage -c 'savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\"'");
 
 printf("savapage-cmd self signed certs...\n");
 system("savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y");
@@ -170,8 +170,8 @@ system("su - postgres -c 'psql savapage < ".$fh->filename."' >/dev/null");
 
 # sync AD/LDAP users
 printf("sync AD users...\n");
-system("su - savapage -c 'savapage-cmd --sync-users-and-groups'");
+system("savapage-cmd --sync-users-and-groups");
 
 # list users to see if synced - savapage-cmd --list-users
 printf("list users...\n");
-system("su - savapage -c 'savapage-cmd --list-users'");
+system("savapage-cmd --list-users");
