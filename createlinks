@@ -30,7 +30,6 @@ my $event = "nethserver-savapage-update";
 event_templates($event, qw(
                  /etc/papersize
                  /opt/savapage/server/server.properties
-                 /var/lib/machines/nsdc/etc/samba/smb.conf.include
 ));
 
 event_actions($event, qw(

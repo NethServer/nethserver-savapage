@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 6%{?dist}
+Release: 7%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 AutoReq: no
@@ -44,6 +44,10 @@ rm -rf %{buildroot}
 
 %changelog
 
+* Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
+- Added trust self-signed cert
+- Added AD SSL connection
+- Removed samba DC patch for no strong auth
 * Sat Dec 30 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-6
 - Added AD/LDAP user sync via new savapage-cmd - thanks to Rijk Ravestein
 - Added savaaduser creation to sync AD
