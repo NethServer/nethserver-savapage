@@ -48,10 +48,11 @@ rm -rf %{buildroot}
 - Added trust self-signed cert
 - Added AD SSL connection
 - Removed samba DC patch for no strong auth
+- Added nethserver-savapage-sync-users
 * Sat Dec 30 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-6
 - Added AD/LDAP user sync via new savapage-cmd - thanks to Rijk Ravestein
 - Added savaaduser creation to sync AD
-- Replaced db commands with savapage-cmd 
+- Replaced db commands with savapage-cmd
 * Thu Dec 28 2017 Markus Neuberger <info@markusneuberger.at> - 0.1.0-5
 - Added password with savapage-cmd - thanks to Rijk Ravestein
 - Added no user source when no AD/LDAP is installed - thanks to Rob Bosch

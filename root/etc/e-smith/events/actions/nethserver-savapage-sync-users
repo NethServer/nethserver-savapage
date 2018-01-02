@@ -1,5 +1,7 @@
 #!/usr/bin/bash
 
+sleep 5
+
 # allow self signed certs
 
 su - savapage -c "savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\""
