@@ -1,13 +1,25 @@
 #!/usr/bin/bash
 
-# wait 10 seconds to be sure savapage service is started
-sleep 10
+#test if savapage has opened the ports
+while :
+do
+    Test=$(netstat -tlpn | grep 0:8632)
+    if [ "$Test" ];then
+        break
+    fi
+    if [ "$count" == 12 ]; then
+       echo "we cannot wait more for savapage"
+       exit 1
+    fi
+    sleep 5
+    let "count++"
+done
 
 # allow self signed certs
-/opt/savapage/server/bin/linux-x64/savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
+#/opt/savapage/server/bin/linux-x64/savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
 
 # sync AD/LDAP users
 /opt/savapage/server/bin/linux-x64/savapage-cmd --sync-users-and-groups
 
 # list users to see if synced - savapage-cmd --list-users
-/opt/savapage/server/bin/linux-x64/savapage-cmd --list-users
+#/opt/savapage/server/bin/linux-x64/savapage-cmd --list-users
