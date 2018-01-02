@@ -151,14 +151,18 @@ printf("set admin pw...\n");
 system("su - savapage -c 'savapage-db --db-config-set auth.ldap.admin-password=\"$secret\"'");
 
 # start savapage to allow savapage-cmd to allow self signed certs and sync
-printf("start savapage and wait 5 seconds...\n");
+printf("start savapage and wait 10 seconds...\n");
 system("systemctl start savapage");
-sleep 5;
+sleep 10;
 
 # allow self signed certs
 printf("self signed certs...\n");
 print $fh "UPDATE savapage.public.tbl_config SET property_value = 'Y' WHERE property_name = 'auth.ldap.use-ssl.trust-self-signed';\n";
-system("su - savapage -c 'savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\"'");
+
+#printf("savapage-db self signed certs...\n");
+#system("su - savapage -c 'savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\"'");
+
+printf("savapage-cmd self signed certs...\n");
 system("savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y");
 
 # Execute SQL script - not needed anymore because of savapage-cmd
