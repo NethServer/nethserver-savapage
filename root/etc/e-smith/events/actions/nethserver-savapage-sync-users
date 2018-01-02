@@ -1,15 +1,13 @@
 #!/usr/bin/bash
 
+# wait 5 seconds to be sure savapage service is started
 sleep 5
 
 # allow self signed certs
-
-su - savapage -c "savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\""
-
-savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
+/opt/savapage/server/bin/linux-x64/savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
 
 # sync AD/LDAP users
-savapage-cmd --sync-users-and-groups
+/opt/savapage/server/bin/linux-x64/savapage-cmd --sync-users-and-groups
 
 # list users to see if synced - savapage-cmd --list-users
-savapage-cmd --list-users
+/opt/savapage/server/bin/linux-x64/savapage-cmd --list-users
