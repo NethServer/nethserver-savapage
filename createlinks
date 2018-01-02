@@ -33,10 +33,11 @@ event_templates($event, qw(
 ));
 
 event_actions($event, qw(
-    initialize-default-databases  00
-    nethserver-savapage-init      10
-    nethserver-savapage-conf      20
-    nethserver-savapage-conf-db   30
+    initialize-default-databases   00
+    nethserver-savapage-init       10
+    nethserver-savapage-conf       20
+    nethserver-savapage-conf-db    30
+    nethserver-savapage-sync-users 99
 ));
 
 event_services($event, qw(

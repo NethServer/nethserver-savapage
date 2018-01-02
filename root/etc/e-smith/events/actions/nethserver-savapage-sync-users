@@ -1,0 +1,13 @@
+#!/usr/bin/bash
+
+# allow self signed certs
+
+su - savapage -c "savapage-db --db-config-set auth.ldap.use-ssl.trust-self-signed=\"Y\""
+
+savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
+
+# sync AD/LDAP users
+savapage-cmd --sync-users-and-groups
+
+# list users to see if synced - savapage-cmd --list-users
+savapage-cmd --list-users
