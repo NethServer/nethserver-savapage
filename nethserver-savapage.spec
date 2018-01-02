@@ -45,7 +45,7 @@ rm -rf %{buildroot}
 %changelog
 
 * Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
-- Added trust self-signed cert
+- Added trust self-signed cert - thanks to Rijk Ravestein
 - Added AD SSL connection
 - Removed samba DC patch for no strong auth
 - Added nethserver-savapage-sync-users
