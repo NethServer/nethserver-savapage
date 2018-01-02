@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
-# wait 5 seconds to be sure savapage service is started
-sleep 5
+# wait 10 seconds to be sure savapage service is started
+sleep 10
 
 # allow self signed certs
 /opt/savapage/server/bin/linux-x64/savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
