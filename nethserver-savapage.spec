@@ -1,11 +1,12 @@
-%define savapage_version 0.9.12
+%define savapage_version 1.0.0-rc
 
 Summary: Savapage open print portal
 Name: nethserver-savapage
-Version: 0.0.1
-Release: 7%{?dist}
+Version: 0.1.0
+Release: 8%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
+Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -34,7 +35,13 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-(cd root; find . -depth -print | cpio -dump %{buildroot})
+mkdir -p root/opt/
+cp %{SOURCE1} root/opt/savapage-setup.bin
+chmod a+x root/opt/savapage-setup.bin
+cd root/opt/ && ./savapage-setup.bin -e
+cd -
+rm -f root/opt/savapage-setup.bin
+(cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
 %files -f %{name}-%{version}-%{release}-filelist
@@ -44,6 +51,8 @@ rm -rf %{buildroot}
 
 %changelog
 
+* Mon Jan 15 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-8
+- Put savapageinstaller to RPM and install at install
 * Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
 - Added trust self-signed cert - thanks to Rijk Ravestein
 - Added AD SSL connection

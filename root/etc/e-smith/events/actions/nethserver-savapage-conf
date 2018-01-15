@@ -36,7 +36,7 @@ if [ "$installsava" = true ]; then
 
    # get savapage
 
-   su savapage -c "wget -nc https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin"
+#   su savapage -c "wget -nc https://www.savapage.org/download/snapshots/savapage-setup-0.9.12-linux-x64.bin"
    su savapage -c "chmod u+x savapage-setup-0.9.12-linux-x64.bin"
 
    # run non-interactive setup as savapage user
