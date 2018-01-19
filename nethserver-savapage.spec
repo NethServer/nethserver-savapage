@@ -35,10 +35,11 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-mkdir -p root/opt/
+mkdir -p root/opt/spi
 cp %{SOURCE1} root/opt/savapage-setup.bin
 chmod a+x root/opt/savapage-setup.bin
 cd root/opt/ && ./savapage-setup.bin -e
+mv savapage spi
 cd -
 rm -f root/opt/savapage-setup.bin
 (cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
