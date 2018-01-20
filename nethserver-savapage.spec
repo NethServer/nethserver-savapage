@@ -2,8 +2,8 @@
 
 Summary: Savapage open print portal
 Name: nethserver-savapage
-Version: 0.1.0
-Release: 8%{?dist}
+Version: 0.0.1
+Release: 9%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
@@ -35,12 +35,9 @@ perl createlinks
 
 %install
 rm -rf %{buildroot}
-mkdir -p root/tmp/
-cp %{SOURCE1} root/tmp/savapage-setup.bin
-chmod a+x root/tmp/savapage-setup.bin
-cd root/tmp/ && ./savapage-setup.bin -e
+mkdir -p root/opt/savapage
+cp %{SOURCE1} root/opt/savapage-setup.bin
 cd -
-rm -f root/tmp/savapage-setup.bin
 (cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
@@ -51,6 +48,10 @@ rm -f root/tmp/savapage-setup.bin
 
 %changelog
 
+* Sat Jan 20 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-9
+- Added backup-config and backup-data
+- Pack installer
+- Correct versioning from 0.1.0 to 0.0.1
 * Mon Jan 15 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-8
 - Put savapageinstaller to RPM and install at install
 * Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
