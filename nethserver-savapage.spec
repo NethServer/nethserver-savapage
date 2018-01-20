@@ -48,10 +48,11 @@ rm -rf %{buildroot}
 
 %changelog
 
-* Sat Jan 20 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-9
+* Sun Jan 21 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-9
 - Added backup-config and backup-data
 - Pack installer
 - Correct versioning from 0.1.0 to 0.0.1
+- Improve firewall settings
 * Mon Jan 15 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-8
 - Put savapageinstaller to RPM and install at install
 * Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
