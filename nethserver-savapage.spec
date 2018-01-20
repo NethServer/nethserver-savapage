@@ -20,7 +20,7 @@ BuildRequires: nethserver-devtools
 Savapage integration to NethServer
 
 %pre
-mkdir -p /opt/savapage/server
+mkdir -p /opt/savapage
 getent group savapage >/dev/null || groupadd -r savapage
 getent passwd savapage >/dev/null || \
     useradd -r -g savapage -d /home/savapage -s /bin/bash \
@@ -37,7 +37,6 @@ perl createlinks
 rm -rf %{buildroot}
 mkdir -p root/opt/savapage
 cp %{SOURCE1} root/opt/savapage-setup.bin
-cd -
 rm -rf %{buildroot}
 (cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
