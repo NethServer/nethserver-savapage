@@ -38,6 +38,7 @@ rm -rf %{buildroot}
 mkdir -p root/opt/savapage
 cp %{SOURCE1} root/opt/savapage-setup.bin
 cd -
+rm -rf %{buildroot}
 (cd root ; find . -depth -not -name '*.orig' -print  | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
 
