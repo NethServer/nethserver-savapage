@@ -23,7 +23,7 @@ Savapage integration to NethServer
 mkdir -p /opt/savapage
 getent group savapage >/dev/null || groupadd -r savapage
 getent passwd savapage >/dev/null || \
-    useradd -r -g savapage -d /home/savapage -s /bin/bash \
+    useradd -r -g savapage -d /opt/savapage -s /bin/bash \
     -c "Savapage user" savapage
 exit 0
 
