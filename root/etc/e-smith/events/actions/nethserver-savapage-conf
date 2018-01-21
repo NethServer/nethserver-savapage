@@ -31,15 +31,11 @@ su - postgres -c "psql -c \"grant all privileges on database savapage to savapag
 
 if [ "$installsava" = true ]; then
 
-   # set user and rights to install savapage
+   # set user and rights and install savapage non-interactively
 
    chown -R savapage:savapage /opt/savapage
 
-   su savapage -c "chmod u+x /opt/savapage/savapage-setup.bin"
-
-   # run non-interactive setup as savapage user
-
-   su savapage -c "/opt/savapage/savapage-setup.bin -n"
+   su savapage -c "cd /opt/savapage; chmod u+x /opt/savapage/savapage-setup.bin; su savapage -c "/opt/savapage/savapage-setup.bin -n"
 
    # run as root for installing services
 
