@@ -64,13 +64,6 @@ if ($sssd->isAD()) {
     $authmethod = "ldap";
     $port = "636";
     $ssl = "Y";
-    $user = $domain.'\savaaduser';
-    $secret = NethServer::Password::store('savaaduser') || die('Could not generate savaaduser password!');
-    # create savaaduser and restart samba in container
-    system("systemd-run -t -M nsdc /usr/bin/samba-tool user delete savaaduser");
-    system("systemd-run -t -M nsdc /usr/bin/samba-tool user create savaaduser $secret");
-    system("systemd-run -t -M nsdc /usr/bin/samba-tool user setexpiry --noexpiry savaaduser");
-    system("systemctl -M nsdc restart samba");
 }
 
 # if LDAP is used
