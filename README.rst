@@ -10,8 +10,8 @@ Database: ::
 
  savapage=service
     PaperSize=a4
-    TCPPorts=8631,8632,8639,5353,5222
-    UDPPorts=8631,8632,8639,5353,5222
+    TCPPorts=8631,8632,8639,5222
+    UDPPort=5353
     access=green
     status=enabled
 
@@ -25,7 +25,5 @@ https://community.nethserver.org/t/nethserver-savapage-module/8493
 ToDos
 =====
 
-Default configuration
-Some props for e-smith db
-Split config and download
-Snapshot or stable version switch
+Test Savapage
+Wait for 1.0.0 stable for final version

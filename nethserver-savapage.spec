@@ -3,7 +3,7 @@
 Summary: Savapage open print portal
 Name: nethserver-savapage
 Version: 0.0.1
-Release: 9%{?dist}
+Release: 8%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
@@ -48,13 +48,11 @@ rm -rf %{buildroot}
 
 %changelog
 
-* Sun Jan 21 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-9
+* Sun Jan 21 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-8
 - Added backup-config and backup-data
 - Pack installer
 - Correct versioning from 0.1.0 to 0.0.1
 - Improve firewall settings
-* Mon Jan 15 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-8
-- Put savapageinstaller to RPM and install at install
 * Tue Jan 02 2018 Markus Neuberger <info@markusneuberger.at> - 0.1.0-7
 - Added trust self-signed cert - thanks to Rijk Ravestein
 - Added AD SSL connection
