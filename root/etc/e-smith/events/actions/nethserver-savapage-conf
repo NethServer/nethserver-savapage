@@ -35,7 +35,7 @@ if [ "$installsava" = true ]; then
 
    chown -R savapage:savapage /opt/savapage
 
-   su savapage -c "cd /opt/savapage; chmod u+x /opt/savapage/savapage-setup.bin; su savapage -c "/opt/savapage/savapage-setup.bin -n"
+   su savapage -c "cd /opt/savapage; chmod u+x savapage-setup.bin; ./savapage-setup.bin -n"
 
    # run as root for installing services
 
