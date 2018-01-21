@@ -36,7 +36,7 @@ perl createlinks
 %install
 rm -rf %{buildroot}
 mkdir -p root/opt/savapage
-cp %{SOURCE1} root/opt/savapage-setup.bin
+cp %{SOURCE1} root/opt/savapage/savapage-setup.bin
 rm -rf %{buildroot}
 (cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
