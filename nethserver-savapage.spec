@@ -1,4 +1,4 @@
-%define savapage_version 1.0.0-rc
+%define savapage_version 1.0.0
 
 Summary: Savapage open print portal
 Name: nethserver-savapage
@@ -6,7 +6,7 @@ Version: 0.0.1
 Release: 8%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
-Source1: https://www.savapage.org/download/snapshots/savapage-setup-%{savapage_version}-linux-x64.bin
+Source1: https://www.savapage.org/download/installer/savapage-setup-%{savapage_version}-linux-x64.bin
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups

@@ -25,5 +25,4 @@ https://community.nethserver.org/t/nethserver-savapage-module/8493
 ToDos
 =====
 
-Test Savapage
-Wait for 1.0.0 stable for final version
+Test Savapage 1.0.0
