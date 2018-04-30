@@ -18,6 +18,8 @@ Database: ::
 Documentation
 =============
 
+https://www.savapage.org/docs/manual-1.0.0/
+
 https://wiki.nethserver.org/doku.php?id=userguide:savapage
 
 https://community.nethserver.org/t/nethserver-savapage-module/8493
