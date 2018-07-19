@@ -3,7 +3,7 @@
 
 Summary: Savapage open print portal
 Name: nethserver-savapage
-Version: 0.0.1-9
+Version: 0.0.2
 Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
@@ -50,6 +50,10 @@ rm -rf %{buildroot}
 %dir %{_nseventsdir}/%{name}-update
 
 %changelog
+* Thu Jul 19 2018 mrmarkuz <31746411+mrmarkuz@users.noreply.github.com> - 0.0.2-1
+  - Update to savapage 1.1.0-rc
+  - Update README
+
 * Sun Jan 21 2018 Markus Neuberger <info@markusneuberger.at> - 0.0.1-8
 - Added backup-config and backup-data
 - Pack installer
