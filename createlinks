@@ -44,3 +44,11 @@ event_services($event, qw(
     postgresql reload
     savapage restart
 ));
+
+# Sucscribe to nethserver-sssd
+
+my $event = "nethserver-sssd-save";
+
+event_actions($event, 'nethserver-savapage-conf-db' => 30);
+
+event_services($event, 'savapage' => 'restart');
