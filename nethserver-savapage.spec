@@ -1,4 +1,4 @@
-%define savapage_version 1.1.0-rc
+%define savapage_version 1.3.0-rc
 %define savapage_directory snapshots
 
 Summary: Savapage open print portal
@@ -8,7 +8,7 @@ Release: 1%{?dist}
 License: GPL
 Source: %{name}-%{version}.tar.gz
 Source1: https://www.savapage.org/download/%{savapage_directory}/savapage-setup-%{savapage_version}-linux-x64.bin
-Source2: https://www.savapage.org/download/snapshots/PostgreSQL/upg-1.8.sql
+#Source2: https://www.savapage.org/download/snapshots/PostgreSQL/upg-1.8.sql
 AutoReq: no
 
 Requires: nethserver-avahi, nethserver-postgresql, nethserver-cups
@@ -39,7 +39,7 @@ perl createlinks
 rm -rf %{buildroot}
 mkdir -p root/opt/savapage
 cp %{SOURCE1} root/opt/savapage/savapage-setup.bin
-cp %{SOURCE2} root/opt/savapage/
+#cp %{SOURCE2} root/opt/savapage/
 rm -rf %{buildroot}
 (cd root; find . -depth -print | cpio -dump %{buildroot})
 %{genfilelist} %{buildroot} > %{name}-%{version}-%{release}-filelist
