@@ -14,12 +14,6 @@ if [ -f /opt/savapage/server/bin/linux-x64/savapage-db ]; then
    installsava=false
 fi
 
-
-# DEBUG LINES
-#echo SAVAPAGE DEBUG DB: $createdb App: $installsava
-#installsava=true
-#createdb=true
-
 # create db, role and set privilges
 
 su - postgres -c "psql -c \"CREATE USER savapage WITH PASSWORD '$(cat /var/lib/nethserver/secrets/savapage)';\""
