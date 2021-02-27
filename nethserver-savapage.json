@@ -1,0 +1,19 @@
+{
+  "id": "nethserver-savapage",
+  "name": "SavaPage",
+  "summary": "Nethserver integration of the SavaPage print server",
+  "description": "Provides a print portal solution",
+  "url": "",
+  "provides": ["nethserver-savapage"],
+  "release": {
+    "version": "0.0.2"
+  },
+  "author": {
+    "name": "Markus Neuberger"
+  },
+  "infoapi": {
+    "path": "nethserver-savapage/read"
+  },
+  "icon": "logo.png",
+  "external": true
+}
