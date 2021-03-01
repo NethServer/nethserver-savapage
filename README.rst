@@ -1,10 +1,10 @@
-========
-SavaPage
-========
+===================
+nethserver-savapage
+===================
 
 Install and configure SavaPage: https://www.savapage.org/
 
-SavaPage is installed inside ``/opt/savapage`` with ``savapage`` user.
+SavaPage is installed inside ``/opt/savapage`` and creates a ``savapage`` system user.
 
 Database: ::
 
@@ -15,16 +15,17 @@ Database: ::
     access=green
     status=enabled
 
-Documentation
-=============
-
-https://www.savapage.org/docs/manual-1.0.0/
-
-https://wiki.nethserver.org/doku.php?id=userguide:savapage
-
-https://community.nethserver.org/t/nethserver-savapage-module/8493
-
-ToDos
+Login
 =====
 
-Test Savapage 1.0.0
+Go to https://NETHSERVER:8632/admin and login with username ``admin`` and password ``admin``.
+
+User sync
+=========
+
+User sync is enabled to sync AD/LDAP users. The AD needs a valid certificate.
+
+Links
+=====
+
+Official documentation: https://www.savapage.org/docs/manual/
