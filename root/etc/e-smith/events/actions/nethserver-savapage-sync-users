@@ -15,11 +15,5 @@ do
     let "count++"
 done
 
-# allow self signed certs
-#/opt/savapage/server/bin/linux-x64/savapage-cmd --set-config-property --name auth.ldap.use-ssl.trust-self-signed --value Y
-
 # sync AD/LDAP users
 /opt/savapage/server/bin/linux-x64/savapage-cmd --sync-users-and-groups
-
-# list users to see if synced - savapage-cmd --list-users
-#/opt/savapage/server/bin/linux-x64/savapage-cmd --list-users

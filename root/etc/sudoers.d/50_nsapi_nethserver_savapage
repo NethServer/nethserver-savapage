@@ -1,0 +1,7 @@
+#
+# nsapi_nethserver_savapage
+#
+Cmnd_Alias NSAPI_NETHSERVER_SAVAPAGE = \
+    /usr/libexec/nethserver/api/nethserver-savapage/read
+
+Defaults!NSAPI_NETHSERVER_SAVAPAGE !requiretty
